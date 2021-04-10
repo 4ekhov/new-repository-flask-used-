@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+    .content-holder{
+    padding-left: 20%;
+    padding-right: 20%;
+    }
+    .sidebar-header {
+    color: #FFFFFF;
+    }
+    body {
+    background: #3de184;
+    color: #FFFFFF;
+    }
+    aside {
+    background: #17a2b8;
+    padding: 10px;
+    width: 17%;
+    float: left;
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+    }
+    a {
+    color: #FFFFFF;
+    }
+    a:hover {
+    color: #CE242B;
+    text-decoration: none;
+    }
+
+
+    </style>
+    <title>{{title}}</title>
+</head>
+  <body>
+    <header>
+      <nav class="navbar navbar-light bg-info">
+        <a href="/">Клуб любителей матушки Земли</a>
+          {% if current_user.is_authenticated %}
+            <a class="navbar-brand" href="/logout" style="color:FFFFFF;">{{ current_user.name }}</a>
+        {% else %}
+            <p>
+                <a class="btn btn-dark" href="/register">Зарегистрироваться</a>
+                <a class="btn btn-dark" href="/login">Войти</a>
+            </p>
+        {% endif %}
+      </nav>
+    </header>
+
+  <aside>
+
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Наши статьи</h3>
+        </div>
+
+        <ul class="list-unstyled components">
+            <li><a href="/">Земля</a></li>
+            <li><a href="#">Люди</a></li>
+            <li><a href="/test">Тестовая страница</a></li>
+            <li><a href="#">О нас</a></li>
+            <li><a href="#">Галерея</a></li>
+            <li><a href="#">Контакты</a></li>
+        </ul>
+    </nav>
+
+</aside>
+    <div class="content-holder">
+    <main role="main" class="container">
+        {% block content %}{% endblock %}
+    </main>
+    </div>
+  </body>
+</html>
