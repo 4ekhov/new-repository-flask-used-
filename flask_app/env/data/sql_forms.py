@@ -7,6 +7,15 @@ from .db_session import SqlAlchemyBase
 from flask_login import UserMixin
 
 
+class Map(SqlAlchemyBase):
+    __tablename__ = 'maps'
+
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    coordinates = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    size = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    type = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
+
 class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
 

@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, TextAreaField, SubmitField, BooleanField
+from flask_wtf.recaptcha import RecaptchaField
+from wtforms import PasswordField, StringField, TextAreaField, SubmitField, BooleanField, SelectField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 
@@ -18,3 +19,12 @@ class LoginForm(FlaskForm):
     password = PasswordField('Пароль', validators=[DataRequired()])
     remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
+
+
+class MapRequestForm(FlaskForm):
+    coordinates = StringField('Координаты', validators=[DataRequired()])
+    size = SelectField('Размер', choices=['1, 1', '2, 2', '3, 3', '7, 7', '15, 15', '30, 30', '58, 58', '89, 89'])
+    type = SelectField('Тип карты', choices=['map', 'sat', 'skl', 'sat,skl'])
+    add_to_sql = BooleanField('Сохранить для всех')
+    recaptcha = RecaptchaField('Капча')
+    submit = SubmitField('Смоделировать карту')

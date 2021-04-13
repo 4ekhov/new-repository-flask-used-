@@ -1,34 +1,67 @@
-from flask import Flask, render_template, redirect, request, make_response
-from forms.user import RegisterForm, LoginForm
+import os
+import sys
+import requests
+from flask import Flask, render_template, redirect, request, make_response, url_for
+from forms.user import RegisterForm, LoginForm, MapRequestForm
 from data.news import News, NewsForm
-from data.users import User
+from data.sql_forms import User, Map
 from data import db_session
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
-
-
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ekxhzywvzbrwucpbwqurrmvoe'
 
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 user = User()
+map = Map()
+
 
 def main():
     db_session.global_init("db/base_sql.db")
     app.run()
 
-@app.route('/test')
-def test():
-    return render_template("test.html")
+
+@app.route('/test', methods=['GET', 'POST'])
+def yandex_map_api():
+    form = MapRequestForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        map.coordinates = form.coordinates.data
+        map.size = form.size.data
+        map.type = form.type.data
+        db_sess.add(map)
+        db_sess.commit()
+        return redirect('/test_map')
+    return render_template('map_request.html', title='Запрос карты', form=form)
+
+
+@app.route('/test_map', methods=['GET', 'POST'])
+def yandex_map_api_show():
+    coords = '19.138796,43.955195'
+    size = '1,1'
+    type_map = 'sat'
+    map_request = "http://static-maps.yandex.ru/1.x/?ll={}&spn={}&l={}".format(coords, size, type_map)
+    response = requests.get(map_request)
+    if not response:
+        sys.exit(1)
+    map_file = "static/images/temporary_map.png"
+    with open(map_file, "wb") as file:
+        file.write(response.content)
+    way = {url_for('static', filename='images/temporary_map.png')}  # TODO почему-то не работает путь до папки, надо
+    # TODO разобраться, тогда будет готова эта штука, а ну и реализация связи с sqlalchemy. Связь сделаю.
+    print(way)
+    return render_template('map_show.html', title='Запрос карты', way=way)
+
 
 @app.route("/")
 def index():
     posts = 'Земля'
     db_sess = db_session.create_session()
     if current_user.is_authenticated:
-        posts = 'Земля'
         news = db_sess.query(News).filter(
             (News.user == current_user) | (News.is_private != True))
     else:
@@ -59,6 +92,7 @@ def reqister():
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
 
+
 @app.route("/cookie_test")
 def cookie_test():
     visits_count = int(request.cookies.get("visits_count", 0))
@@ -74,10 +108,12 @@ def cookie_test():
                        max_age=60 * 60 * 24 * 365 * 2)
     return res
 
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -93,13 +129,15 @@ def login():
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
 
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect("/")
 
-@app.route('/news',  methods=['GET', 'POST'])
+
+@app.route('/news', methods=['GET', 'POST'])
 @login_required
 def add_news():
     form = NewsForm()
