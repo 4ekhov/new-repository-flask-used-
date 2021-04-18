@@ -22,8 +22,8 @@ class LoginForm(FlaskForm):
 
 
 class MapRequestForm(FlaskForm):
-    coordinates = StringField('Координаты', validators=[DataRequired()])
-    size = SelectField('Размер', choices=['1, 1', '2, 2', '3, 3', '7, 7', '15, 15', '30, 30', '58, 58', '89, 89'])
+    coordinates = StringField('Координаты (долгота,широта)', validators=[DataRequired()])
+    size = SelectField('Размер', choices=['1,1', '2,2', '3,3', '7,7', '15,15', '30,30', '58,58', '89,89'])
     type = SelectField('Тип карты', choices=['map', 'sat', 'skl', 'sat,skl'])
     add_to_sql = BooleanField('Сохранить для всех')
     recaptcha = RecaptchaField('Капча')

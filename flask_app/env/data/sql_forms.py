@@ -6,7 +6,6 @@ from flask_login import LoginManager
 from .db_session import SqlAlchemyBase
 from flask_login import UserMixin
 
-
 class Map(SqlAlchemyBase):
     __tablename__ = 'maps'
 
@@ -14,7 +13,7 @@ class Map(SqlAlchemyBase):
     coordinates = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     size = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     type = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-
+    
 
 class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'

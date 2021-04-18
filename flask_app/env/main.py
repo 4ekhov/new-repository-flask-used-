@@ -1,7 +1,8 @@
 import os
-import sys
+
+from shutil import rmtree
 import requests
-from flask import Flask, render_template, redirect, request, make_response, url_for
+from flask import Flask, render_template, redirect, request, make_response
 from forms.user import RegisterForm, LoginForm, MapRequestForm
 from data.news import News, NewsForm
 from data.sql_forms import User, Map
@@ -10,6 +11,8 @@ from flask_login import LoginManager, login_user, login_required, current_user, 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ekxhzywvzbrwucpbwqurrmvoe'
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
 
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
@@ -22,7 +25,10 @@ map = Map()
 
 def main():
     db_session.global_init("db/base_sql.db")
+    if not os.path.exists('static/images/'):
+        os.makedirs('static/images/')
     app.run()
+    rmtree('static/images/')
 
 
 @app.route('/test', methods=['GET', 'POST'])
@@ -41,20 +47,24 @@ def yandex_map_api():
 
 @app.route('/test_map', methods=['GET', 'POST'])
 def yandex_map_api_show():
-    coords = '19.138796,43.955195'
-    size = '1,1'
-    type_map = 'sat'
+
+    db_sess = db_session.create_session()
+    place = db_sess.query(Map).order_by(Map.id.desc()).first()
+    coords = place.coordinates
+    size = place.size
+    type_map = place.type
     map_request = "http://static-maps.yandex.ru/1.x/?ll={}&spn={}&l={}".format(coords, size, type_map)
     response = requests.get(map_request)
     if not response:
-        sys.exit(1)
-    map_file = "static/images/temporary_map.png"
+        db_sess.query(Map).filter(Map.coordinates == coords).delete(synchronize_session='evaluate')
+        db_sess.commit()
+        return render_template('map_show.html', title='Запрос карты', way=None, message='Ошибка запроса карты')
+    map_file = "static/images/{}_{}_{}.png".format(coords, size, type_map)
+    print(map_file)
     with open(map_file, "wb") as file:
         file.write(response.content)
-    way = {url_for('static', filename='images/temporary_map.png')}  # TODO почему-то не работает путь до папки, надо
-    # TODO разобраться, тогда будет готова эта штука, а ну и реализация связи с sqlalchemy. Связь сделаю.
-    print(way)
-    return render_template('map_show.html', title='Запрос карты', way=way)
+    return render_template('map_show.html', title='Запрос карты',
+                           way=map_file, message='координаты:{} размер:{} тип:{}'.format(coords, size, type_map))
 
 
 @app.route("/")
