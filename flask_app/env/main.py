@@ -70,6 +70,9 @@ def index():
         )
     return render_template("index.html", news=news, posts=posts)
 
+@app.route("/article")
+def image():
+    return render_template("type_article.html")
 
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
