@@ -1,4 +1,5 @@
 import os
+
 from shutil import rmtree
 import requests
 from flask import Flask, render_template, redirect, request, make_response
@@ -8,11 +9,11 @@ from data.sql_forms import User, Map
 from data import db_session
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 
-
-
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ekxhzywvzbrwucpbwqurrmvoe'
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
+
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
 
@@ -20,6 +21,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 user = User()
 map = Map()
+
 
 def main():
     db_session.global_init("db/base_sql.db")
@@ -45,6 +47,7 @@ def yandex_map_api():
 
 @app.route('/test_map', methods=['GET', 'POST'])
 def yandex_map_api_show():
+
     db_sess = db_session.create_session()
     place = db_sess.query(Map).order_by(Map.id.desc()).first()
     coords = place.coordinates
@@ -62,6 +65,7 @@ def yandex_map_api_show():
         file.write(response.content)
     return render_template('map_show.html', title='Запрос карты',
                            way=map_file, message='координаты:{} размер:{} тип:{}'.format(coords, size, type_map))
+
 
 @app.route("/")
 def index():
@@ -98,6 +102,7 @@ def reqister():
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
 
+
 @app.route("/cookie_test")
 def cookie_test():
     visits_count = int(request.cookies.get("visits_count", 0))
@@ -113,10 +118,12 @@ def cookie_test():
                        max_age=60 * 60 * 24 * 365 * 2)
     return res
 
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -132,13 +139,15 @@ def login():
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
 
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect("/")
 
-@app.route('/news',  methods=['GET', 'POST'])
+
+@app.route('/news', methods=['GET', 'POST'])
 @login_required
 def add_news():
     form = NewsForm()
