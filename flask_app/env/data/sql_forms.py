@@ -2,10 +2,16 @@ import datetime
 import sqlalchemy
 from sqlalchemy import orm
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager
 from .db_session import SqlAlchemyBase
 from flask_login import UserMixin
 
+class Map(SqlAlchemyBase):
+    __tablename__ = 'maps'
+
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    coordinates = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    size = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    type = sqlalchemy.Column(sqlalchemy.String, nullable=False)
 
 class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
