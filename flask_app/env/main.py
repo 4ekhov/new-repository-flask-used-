@@ -14,9 +14,6 @@ app.config['SECRET_KEY'] = 'ekxhzywvzbrwucpbwqurrmvoe'
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
 
-app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
-app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 user = User()
@@ -47,7 +44,6 @@ def yandex_map_api():
 
 @app.route('/test_map', methods=['GET', 'POST'])
 def yandex_map_api_show():
-
     db_sess = db_session.create_session()
     place = db_sess.query(Map).order_by(Map.id.desc()).first()
     coords = place.coordinates
@@ -164,6 +160,26 @@ def add_news():
     return render_template('news.html', title='Добавление новости',
                            form=form)
 
+
+@app.route('/profile')
+@login_required
+def profile_redirect():
+    return redirect('/profile/{}'.format(current_user.id))
+
+
+@app.route('/profile/<id>')
+def profile_page(id):
+    if current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        id_user = db_sess.query(User).filter(
+            User.id == id).first()
+        if id_user is not None:
+            db_sess = db_session.create_session()
+            news = db_sess.query(News).filter(
+                (News.user_id == id)).filter(News.is_private != True)
+            return render_template('profile.html', form=(id_user, news))
+        return render_template('404.html', message='Такого пользователя не существует')
+    return render_template('404.html', message='Вы не вошли в аккаунт')
 
 if __name__ == '__main__':
     main()
