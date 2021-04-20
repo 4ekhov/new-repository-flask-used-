@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if current_user.is_authenticated and current_user.id == form[0].id %}
+<h1>Ваша страница</h1>
+<p>Имя пользователя: {{form[0].name}}</p>
+<p>Почтовый ящик: {{form[0].email}}</p>
+<p>О Вас: {{form[0].about}}</p>
+<p>Дата создания: {{form[0].created_date}}</p>
+<p>Посты пользователя:</p>
+{% for item in form[1]%}
+<div class="col-md6 border rounded">
+    <h2>{{item.title}}</h2>
+    <p>{{item.content}}</p>
+    <p>Дата написания - {{item.created_date}}</p>
+</div>
+{% endfor %}
+{% elif current_user.is_authenticated and current_user.id != form[0].id %}
+<h1>Страница пользователя</h1>
+<p>Имя пользователя: {{form[0].name}}</p>
+<p>О пользователе: {{form[0].about}}</p>
+<p>Дата создания: {{form[0].created_date}}</p>
+<p>Посты пользователя:</p>
+{% for item in form[1]%}
+<div class="col-md6 border rounded">
+    <h2>{{item.title}}</h2>
+    <p>{{item.content}}</p>
+    <p>Дата написания - {{item.created_date}}</p>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}
