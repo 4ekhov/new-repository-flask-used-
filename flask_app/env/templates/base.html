@@ -5,21 +5,42 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
     #content-holder{
     padding-left: 10%;
     padding-right: 10%;
     margin: 5%;
-    background: #17a2b8;
+    background: #333333;
     -webkit-border-bottom-right-radius: 2%;
     -webkit-border-top-right-radius: 2%;
     -webkit-border-bottom-left-radius: 2%;
     -webkit-border-top-left-radius: 2%;
 
     }
-    nav#sidebar {
-    color: #FFFFFF;
+    .topnav {
+    overflow: hidden;
+    background-color: #333;
+    }
+
+    .topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    }
+
+    .topnav a:hover {
+    background-color: #ddd;
+    color: black;
+    }
+
+    .topnav a.active {
+    background-color: #4CAF50;
+    color: white;
     }
     div#content {
     color: #FFFFFF;
@@ -27,16 +48,13 @@
     padding-right: 20%;
     }
     aside {
-    background: #17a2b8;
+    background: #333333;
     padding: 10px;
     width: 17%;
     float: left;
     padding-left: 2.5%;
     padding-right: 2.5%;
     -webkit-border-bottom-right-radius: 5%;
-    }
-    a {
-    color: #FFFFFF;
     }
     a:hover {
     color: #CE242B;
@@ -46,7 +64,122 @@
     color: #DCDCDC;
     font-size: 8pt;
     }
+    #rectangle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;
+    height: 120px;
+    background: #4da1f7;
+    }
+    .container {
+    position: relative;
+    }
+    /* Centered text */
+    .centered {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    footer{background:#1a1a1a;} /*фон подвала */
+        .social-icons ul{
+            list-style: none;
+            display: flex;
+            justify-content: center;
+        }
+        .social-icons ul li a span {
+        color: #947b00;
+        width: 34px;
+        background: #fff;
+        height: 34px;
+        text-align: center;
+        line-height: 34px;
+        border-radius: 20px;
+        font-size: 13px;
+        margin: 0px 2px;
+        border-radius: 20px;
+        font-size: 14px;
+        margin: 0px 2px;
+        transition: 0.5s all;
+        -webkit-transition: 0.5s all;
+        transition: 0.5s all;
+        -moz-transition: 0.5s all;
+        }
+        .social-icons ul li a span:hover{color:#0ccbf1;}
+        .copy-bottom-txt p{font-size:18px;
+        color:#fff;
+        }
+        .social-icons ul li:nth-child(2){
+            margin: 0 10px;
+        }
+        .copy-bottom-txt p a {
+        font-size: 18px;
+        color:#947b00;
+        letter-spacing: 1px;
+        transition: .4s;
+        }
+        .copy-bottom-txt p a:hover {
+        color: #000;
+        text-decoration: underline;
+        padding-top: 4px;
+        font-weight: 700;
+        }
+        .column {
+        -webkit-column-width: 200px;
+        -moz-column-width: 200px;
+        column-width: 200px;
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3;
+        -webkit-column-gap: 30px;
+        -moz-column-gap: 30px;
+        column-gap: 30px;
+        -webkit-column-rule: 1px solid #ccc;
+        -moz-column-rule: 1px solid #ccc;
+        column-rule: 1px solid #ccc;
+       }
+       a {
+       color: #FFFFFF;
+  text-decoration: none;
+    }
 
+    ul {
+      background: #1a1a1a;
+      list-style: none;
+    }
+
+    li {
+      color: #fff;
+      background: #1a1a1a;
+      display: block;
+      float: left;
+      padding: 2px;
+      position: relative;
+    }
+
+    li a {
+      color: #333333;
+    }
+
+    li:hover {
+      background: #1a1a1a;
+      cursor: pointer;
+    }
+
+    ul li ul {
+      background: #333333;
+      visibility: hidden;
+      position: absolute;
+      left: 0;
+      display: none;
+    }
+
+    ul li:hover > ul{
+      visibility: visible;
+      display: block;
+    }
 
     </style>
     <title>{{title}}</title>
@@ -54,44 +187,61 @@
 
 
 <body>
-    <header>
-      <nav class="navbar navbar-light bg-info">
-          <a href="/">Клуб любителей матушки Земли</a>
-          {% if current_user.is_authenticated %}
-          <a class="navbar-brand" href="/logout" style="color:FFFFFF;">{{ current_user.name }}</a>
-          {% else %}
-          <p>
-              <a class="btn btn-dark" href="/register">Зарегистрироваться</a>
-              <a class="btn btn-dark" href="/login">Войти</a>
-          </p>
-          {% endif %}
-      </nav>
-    </header>
-    <aside>
-        <nav id="sidebar">
-            <div class="sidebar-header">
-                <h3>Наши статьи</h3>
-            </div>
-            <ul class="list-unstyled components">
-                <li><a href="/">Земля</a></li>
-                <li><a href="#">Люди</a></li>
-                <li><a href="/test">Тестовая страница</a></li>
-                <li><a href="#">О нас</a></li>
-                <li><a href="#">Галерея</a></li>
-                <li><a href="#">Контакты</a></li>
-            </ul>
-        </nav>
-    </aside>
-
-    <div id="content">
-        <div id="content-holder">
-            <main role="main" class="container">
-                <div id="high-gear-html">
-                {% block content %}{% endblock %}
-                </div>
-            </main>
-        </div>
+<header>
+    <div class="topnav">
+        <a href="/">Клуб любителей матушки Земли</a>
+        <aside>
+            <nav role="navigation">
+                <ul>
+                    <li><a href="#">Наши статьи</a>
+                        <ul class="dropdown">
+                            <li><a href="#">Земля</a></li>
+                            <li><a href="#">Вода</a></li>
+                            <li><a href="#">Огонь</a></li>
+                            <li><a href="#">Воздух</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        {% if current_user.is_authenticated %}
+        <a class="navbar-brand" href="/logout" style="color:FFFFFF; position:absolute; left:80%">{{ current_user.name
+            }}</a>
+        {% else %}
+        <p>
+            <a class="btn btn-dark" href="/register">Зарегистрироваться</a>
+            <a class="btn btn-dark" href="/login">Войти</a>
+        </p>
+        {% endif %}
     </div>
+</header>
+
+<div id="content">
+    <div id="content-holder">
+        <main role="main" class="container">
+            <div id="high-gear-html">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+</div>
+
+<footer class="py-3">
+    <div class="copy-bottom-txt text-center py-3">
+        <p>
+            © 2020 Zemel'ka. All Rights Reserved | Design by <a href="#" target="_blank">Pomor and 4ekhov</a>
+        </p>
+    </div>
+    <div class="social-icons mt-lg-3 mt-2 text-center">
+        <ul>
+            <li><a href="#"><span class="fa fa-telegram"></span></a></li>
+            <li><a href="#"><span class="fa fa-vk"></span></a></li>
+            <li><a href="#"><span class="fa fa-steam"></span></a></li>
+        </ul>
+    </div>
+</footer>
+<!-- CDN подключение иконок fontawesome -->
+<script src="https://use.fontawesome.com/df966d76e1.js"></script>
 </body>
 
 
