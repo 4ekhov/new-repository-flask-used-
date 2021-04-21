@@ -48,6 +48,7 @@
     padding-right: 20%;
     }
     aside {
+    position:relative;
     background: #333333;
     padding: 10px;
     width: 17%;
@@ -55,10 +56,6 @@
     padding-left: 2.5%;
     padding-right: 2.5%;
     -webkit-border-bottom-right-radius: 5%;
-    }
-    a:hover {
-    color: #CE242B;
-    text-decoration: none;
     }
     .CAPTCHA{
     color: #DCDCDC;
@@ -140,46 +137,48 @@
         -moz-column-rule: 1px solid #ccc;
         column-rule: 1px solid #ccc;
        }
-       a {
-       color: #FFFFFF;
-  text-decoration: none;
+       /* Dropdown Button */
+    .dropbtn {
+        background-color: #947b00;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
     }
 
-    ul {
-      background: #1a1a1a;
-      list-style: none;
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+        position: relative;
+        display: inline-block;
     }
 
-    li {
-      color: #fff;
-      background: #1a1a1a;
-      display: block;
-      float: left;
-      padding: 2px;
-      position: relative;
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        background-color: #1a1a1a;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     }
 
-    li a {
-      color: #333333;
+    /* Links inside the dropdown */
+    .dropdown-content a {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
     }
 
-    li:hover {
-      background: #1a1a1a;
-      cursor: pointer;
-    }
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {background-color: #999999;}
 
-    ul li ul {
-      background: #333333;
-      visibility: hidden;
-      position: absolute;
-      left: 0;
-      display: none;
-    }
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {display: block;}
 
-    ul li:hover > ul{
-      visibility: visible;
-      display: block;
-    }
+    /* Change the background color of the dropdown button when the dropdown content is shown */
+    .dropdown:hover .dropbtn {background-color: #615100;}
+
 
     </style>
     <title>{{title}}</title>
@@ -190,20 +189,15 @@
 <header>
     <div class="topnav">
         <a href="/">Клуб любителей матушки Земли</a>
-        <aside>
-            <nav role="navigation">
-                <ul>
-                    <li><a href="#">Наши статьи</a>
-                        <ul class="dropdown">
-                            <li><a href="#">Земля</a></li>
-                            <li><a href="#">Вода</a></li>
-                            <li><a href="#">Огонь</a></li>
-                            <li><a href="#">Воздух</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
+            <div class="dropdown">
+                <button class="dropbtn">Наши статьи</button>
+                <div class="dropdown-content">
+                    <a href="/article">Земля</a>
+                    <a href="#">Вода</a>
+                    <a href="#">Огонь</a>
+                    <a href="#">Воздух</a>
+                </div>
+            </div>
         {% if current_user.is_authenticated %}
         <a class="navbar-brand" href="/logout" style="color:FFFFFF; position:absolute; left:80%">{{ current_user.name
             }}</a>
