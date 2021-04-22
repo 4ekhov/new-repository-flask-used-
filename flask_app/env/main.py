@@ -1,18 +1,18 @@
 import os
-
 from shutil import rmtree
 import requests
-from flask import Flask, render_template, redirect, request, make_response
-from forms.user import RegisterForm, LoginForm, MapRequestForm
-from data.news import News, NewsForm
-from data.sql_forms import User, Map
-from data import db_session
-from flask_login import LoginManager, login_user, login_required, current_user, logout_user
+from flask import Flask, render_template, redirect, request
+from forms.user import RegisterForm, LoginForm, MapRequestForm, NewsForm
+from data.sql_forms import User, Map, News
+from data import db_session, api
+from flask_login import LoginManager, login_user, current_user, logout_user
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ekxhzywvzbrwucpbwqurrmvoe'
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+app.config['JSON_AS_ASCII'] = False
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -22,13 +22,14 @@ map = Map()
 
 def main():
     db_session.global_init("db/base_sql.db")
+    app.register_blueprint(api.blueprint)
     if not os.path.exists('static/images/'):
         os.makedirs('static/images/')
     app.run()
     rmtree('static/images/')
 
 
-@app.route('/test', methods=['GET', 'POST'])
+@app.route('/yandex_api', methods=['GET', 'POST'])
 def yandex_map_api():
     form = MapRequestForm()
     if form.validate_on_submit():
@@ -38,11 +39,11 @@ def yandex_map_api():
         map.type = form.type.data
         db_sess.add(map)
         db_sess.commit()
-        return redirect('/test_map')
+        return redirect('/yandex_api_map')
     return render_template('map_request.html', title='Запрос карты', form=form)
 
 
-@app.route('/test_map', methods=['GET', 'POST'])
+@app.route('/yandex_api_map', methods=['GET', 'POST'])
 def yandex_map_api_show():
     db_sess = db_session.create_session()
     place = db_sess.query(Map).order_by(Map.id.desc()).first()
@@ -56,7 +57,6 @@ def yandex_map_api_show():
         db_sess.commit()
         return render_template('map_show.html', title='Запрос карты', way=None, message='Ошибка запроса карты')
     map_file = "static/images/{}_{}_{}.png".format(coords, size, type_map)
-    print(map_file)
     with open(map_file, "wb") as file:
         file.write(response.content)
     return render_template('map_show.html', title='Запрос карты',
@@ -69,16 +69,24 @@ def index():
     db_sess = db_session.create_session()
     if current_user.is_authenticated:
         news = db_sess.query(News).filter(
-            (News.user == current_user) | (News.is_private != True))
+            (News.user == current_user) | (News.is_private is not True))
     else:
         news = db_sess.query(News).filter(
-            (News.is_private != True)
+            (News.is_private is not True)
         )
     return render_template("index.html", news=news, posts=posts)
 
-@app.route("/article")
+@app.route("/article", methods=['GET', 'POST'])
 def image():
-    return render_template("type_article.html")
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.id == current_user.id, User.article_id == 1, User.was_read is False)
+    if user:
+        user.was_read = True
+        user.article_score = int(request.form['rating'])
+        return render_template("type_article.html", was_read=0)
+    else:
+        return render_template("type_article.html", was_read=1, rating=user.article_score)
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
@@ -100,22 +108,6 @@ def reqister():
         db_sess.commit()
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
-
-
-@app.route("/cookie_test")
-def cookie_test():
-    visits_count = int(request.cookies.get("visits_count", 0))
-    if visits_count:
-        res = make_response(
-            f"Вы пришли на эту страницу {visits_count + 1} раз")
-        res.set_cookie("visits_count", str(visits_count + 1),
-                       max_age=60 * 60 * 24 * 365 * 2)
-    else:
-        res = make_response(
-            "Вы пришли на эту страницу в первый раз за последние 2 года")
-        res.set_cookie("visits_count", '1',
-                       max_age=60 * 60 * 24 * 365 * 2)
-    return res
 
 
 @login_manager.user_loader
@@ -140,34 +132,37 @@ def login():
 
 
 @app.route('/logout')
-@login_required
 def logout():
-    logout_user()
-    return redirect("/")
+    if current_user.is_authenticated:
+        logout_user()
+        return redirect("/")
+    return render_template('error.html', message='Вы не вошли в аккаунт')
 
 
 @app.route('/news', methods=['GET', 'POST'])
-@login_required
 def add_news():
-    form = NewsForm()
-    if form.validate_on_submit():
-        db_sess = db_session.create_session()
-        news = News()
-        news.title = form.title.data
-        news.content = form.content.data
-        news.is_private = form.is_private.data
-        current_user.news.append(news)
-        db_sess.merge(current_user)
-        db_sess.commit()
-        return redirect('/')
-    return render_template('news.html', title='Добавление новости',
-                           form=form)
+    if current_user.is_authenticated:
+        form = NewsForm()
+        if form.validate_on_submit():
+            db_sess = db_session.create_session()
+            news = News()
+            news.title = form.title.data
+            news.content = form.content.data
+            news.is_private = form.is_private.data
+            current_user.news.append(news)
+            db_sess.merge(current_user)
+            db_sess.commit()
+            return redirect('/')
+        return render_template('news.html', title='Добавление новости',
+                               form=form)
+    return render_template('error.html', message='Вы не вошли в аккаунт')
 
 
 @app.route('/profile')
-@login_required
 def profile_redirect():
-    return redirect('/profile/{}'.format(current_user.id))
+    if current_user.is_authenticated:
+        return redirect('/profile/{}'.format(current_user.id))
+    return render_template('error.html', message='Вы не вошли в аккаунт')
 
 
 @app.route('/profile/<id>')
@@ -179,10 +174,23 @@ def profile_page(id):
         if id_user is not None:
             db_sess = db_session.create_session()
             news = db_sess.query(News).filter(
-                (News.user_id == id)).filter(News.is_private != True)
+                (News.user_id == id))
+            if id != current_user.id:
+                news = news.filter(News.is_private is not True)
             return render_template('profile.html', form=(id_user, news))
-        return render_template('404.html', message='Такого пользователя не существует')
-    return render_template('404.html', message='Вы не вошли в аккаунт')
+        return render_template('error.html', message='Такого пользователя не существует')
+    return render_template('error.html', message='Вы не вошли в аккаунт')
+
+
+@app.errorhandler(404)
+def not_found():
+    return render_template('error.html', message='Неизвестная ошибка')
+
+
+@app.errorhandler(500)
+def not_found():
+    return render_template('error.html', message='такой страницы не существует')
+
 
 if __name__ == '__main__':
     main()

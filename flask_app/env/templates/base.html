@@ -5,19 +5,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
     #content-holder{
     padding-left: 10%;
     padding-right: 10%;
     margin: 5%;
-    background: #333333;
+    background: #333;
     -webkit-border-bottom-right-radius: 2%;
     -webkit-border-top-right-radius: 2%;
     -webkit-border-bottom-left-radius: 2%;
     -webkit-border-top-left-radius: 2%;
 
+    }
+    nav#sidebar {
+    color: #FFFFFF;
     }
     .topnav {
     overflow: hidden;
@@ -47,14 +49,18 @@
     padding-left: 20%;
     padding-right: 20%;
     }
-    aside {
-    background: #333333;
+    aside.in-header-left {
+    position:relative;
     padding: 10px;
-    width: 17%;
     float: left;
-    padding-left: 2.5%;
-    padding-right: 2.5%;
-    -webkit-border-bottom-right-radius: 5%;
+    }
+    aside.in-header-right {
+    position:relative;
+    padding: 10px;
+    float: right;
+    }
+    a {
+    color: #FFFFFF;
     }
     a:hover {
     color: #CE242B;
@@ -76,7 +82,7 @@
     .container {
     position: relative;
     }
-    /* Centered text */
+
     .centered {
         position: absolute;
         top: 50%;
@@ -140,46 +146,103 @@
         -moz-column-rule: 1px solid #ccc;
         column-rule: 1px solid #ccc;
        }
-       a {
-       color: #FFFFFF;
-  text-decoration: none;
+
+    .dropbtn {
+        background-color: #947b00;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
     }
 
-    ul {
-      background: #1a1a1a;
-      list-style: none;
+    .dropdown {
+        position: relative;
+        display: inline-block;
     }
 
-    li {
-      color: #fff;
-      background: #1a1a1a;
-      display: block;
-      float: left;
-      padding: 2px;
-      position: relative;
+    .dropdown-content {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        background-color: #1a1a1a;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     }
 
-    li a {
-      color: #333333;
+    .dropdown-content a {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
     }
 
-    li:hover {
-      background: #1a1a1a;
-      cursor: pointer;
+    .dropdown-content a:hover {background-color: #999999;}
+
+    .dropdown:hover .dropdown-content {display: block;}
+
+    .dropdown:hover .dropbtn {background-color: #615100;}
+
+    .rating-area {
+	overflow: hidden;
+	width: 265px;
+	margin: 0 auto;
+    }
+    .rating-area:not(:checked) > input {
+        display: none;
+    }
+    .rating-area:not(:checked) > label {
+        float: right;
+        width: 42px;
+        padding: 0;
+        cursor: pointer;
+        font-size: 32px;
+        line-height: 32px;
+        color: lightgrey;
+        text-shadow: 1px 1px #bbb;
+    }
+    .rating-area:not(:checked) > label:before {
+        content: '★';
+    }
+    .rating-area > input:checked ~ label {
+        color: gold;
+        text-shadow: 1px 1px #c60;
+    }
+    .rating-area:not(:checked) > label:hover,
+    .rating-area:not(:checked) > label:hover ~ label {
+        color: gold;
     }
 
-    ul li ul {
-      background: #333333;
-      visibility: hidden;
-      position: absolute;
-      left: 0;
-      display: none;
+    .rating-area > input:checked + label:hover,
+    .rating-area > input:checked + label:hover ~ label,
+    .rating-area > input:checked ~ label:hover,
+    .rating-area > input:checked ~ label:hover ~ label,
+    .rating-area > label:hover ~ input:checked ~ label {
+        color: gold;
+        text-shadow: 1px 1px goldenrod;
+    }
+    .rate-area > label:active {
+        position: relative;
+    }
+    .rating-result {
+	width: 265px;
+	margin: 0 auto;
+    }
+    .rating-result span {
+        padding: 0;
+        font-size: 32px;
+        margin: 0 3px;
+        line-height: 1;
+        color: lightgrey;
+        text-shadow: 1px 1px #bbb;
+    }
+    .rating-result > span:before {
+        content: '★';
+    }
+    .rating-result > span.active {
+        color: gold;
+        text-shadow: 1px 1px #c60;
     }
 
-    ul li:hover > ul{
-      visibility: visible;
-      display: block;
-    }
 
     </style>
     <title>{{title}}</title>
@@ -189,29 +252,29 @@
 <body>
 <header>
     <div class="topnav">
-        <a href="/">Клуб любителей матушки Земли</a>
-        <aside>
-            <nav role="navigation">
-                <ul>
-                    <li><a href="#">Наши статьи</a>
-                        <ul class="dropdown">
-                            <li><a href="#">Земля</a></li>
-                            <li><a href="#">Вода</a></li>
-                            <li><a href="#">Огонь</a></li>
-                            <li><a href="#">Воздух</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
+        <aside class="in-header-left">
+            <a href="/">Клуб любителей матушки Земли</a>
+            <div class="dropdown">
+                <button class="dropbtn">Наши статьи</button>
+                <div class="dropdown-content">
+                    <a href="/article">Земля</a>
+                    <a href="/yandex_api">Вода</a>
+                    <a href="/profile">Огонь</a>
+                    <a href="/">Воздух</a>
+                </div>
+            </div>
         </aside>
         {% if current_user.is_authenticated %}
-        <a class="navbar-brand" href="/logout" style="color:FFFFFF; position:absolute; left:80%">{{ current_user.name
-            }}</a>
+        <aside class="in-header-right">
+            <a class="navbar-brand" href="/profile">{{ current_user.name }}</a>
+        </aside>
         {% else %}
-        <p>
-            <a class="btn btn-dark" href="/register">Зарегистрироваться</a>
-            <a class="btn btn-dark" href="/login">Войти</a>
-        </p>
+        <aside class="in-header-right">
+            <a>
+                <a class="btn btn-dark" href="/register">Зарегистрироваться</a>
+                <a class="btn btn-dark" href="/login">Войти</a>
+            </a>
+        </aside>
         {% endif %}
     </div>
 </header>
@@ -229,7 +292,7 @@
 <footer class="py-3">
     <div class="copy-bottom-txt text-center py-3">
         <p>
-            © 2020 Zemel'ka. All Rights Reserved | Design by <a href="#" target="_blank">Pomor and 4ekhov</a>
+            © 2020 Zemel'ka. All Rights Reserved | Design by <a href="https://github.com/4ekhov/new-repository-flask-used-" target="_blank">Pomor and 4ekhov</a>
         </p>
     </div>
     <div class="social-icons mt-lg-3 mt-2 text-center">
