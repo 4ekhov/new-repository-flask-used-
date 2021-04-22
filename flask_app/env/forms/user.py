@@ -28,3 +28,11 @@ class MapRequestForm(FlaskForm):
     add_to_sql = BooleanField('Сохранить для всех')
     recaptcha = RecaptchaField('Капча')
     submit = SubmitField('Смоделировать карту')
+
+
+class NewsForm(FlaskForm):
+    title = StringField('Заголовок', validators=[DataRequired()])
+    content = TextAreaField("Содержание")
+    is_private = BooleanField("Личное")
+    submit = SubmitField('Применить')
+

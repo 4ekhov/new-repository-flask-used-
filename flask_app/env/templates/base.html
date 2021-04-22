@@ -11,7 +11,7 @@
     padding-left: 10%;
     padding-right: 10%;
     margin: 5%;
-    background: #17a2b8;
+    background: #333;
     -webkit-border-bottom-right-radius: 2%;
     -webkit-border-top-right-radius: 2%;
     -webkit-border-bottom-left-radius: 2%;
@@ -21,19 +21,43 @@
     nav#sidebar {
     color: #FFFFFF;
     }
+    .topnav {
+    overflow: hidden;
+    background-color: #333;
+    }
+
+    .topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    }
+
+    .topnav a:hover {
+    background-color: #ddd;
+    color: black;
+    }
+
+    .topnav a.active {
+    background-color: #4CAF50;
+    color: white;
+    }
     div#content {
     color: #FFFFFF;
     padding-left: 20%;
     padding-right: 20%;
     }
-    aside {
-    background: #17a2b8;
+    aside.in-header-left {
+    position:relative;
     padding: 10px;
-    width: 17%;
     float: left;
-    padding-left: 2.5%;
-    padding-right: 2.5%;
-    -webkit-border-bottom-right-radius: 5%;
+    }
+    aside.in-header-right {
+    position:relative;
+    padding: 10px;
+    float: right;
     }
     a {
     color: #FFFFFF;
@@ -46,6 +70,178 @@
     color: #DCDCDC;
     font-size: 8pt;
     }
+    #rectangle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;
+    height: 120px;
+    background: #4da1f7;
+    }
+    .container {
+    position: relative;
+    }
+
+    .centered {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    footer{background:#1a1a1a;} /*фон подвала */
+        .social-icons ul{
+            list-style: none;
+            display: flex;
+            justify-content: center;
+        }
+        .social-icons ul li a span {
+        color: #947b00;
+        width: 34px;
+        background: #fff;
+        height: 34px;
+        text-align: center;
+        line-height: 34px;
+        border-radius: 20px;
+        font-size: 13px;
+        margin: 0px 2px;
+        border-radius: 20px;
+        font-size: 14px;
+        margin: 0px 2px;
+        transition: 0.5s all;
+        -webkit-transition: 0.5s all;
+        transition: 0.5s all;
+        -moz-transition: 0.5s all;
+        }
+        .social-icons ul li a span:hover{color:#0ccbf1;}
+        .copy-bottom-txt p{font-size:18px;
+        color:#fff;
+        }
+        .social-icons ul li:nth-child(2){
+            margin: 0 10px;
+        }
+        .copy-bottom-txt p a {
+        font-size: 18px;
+        color:#947b00;
+        letter-spacing: 1px;
+        transition: .4s;
+        }
+        .copy-bottom-txt p a:hover {
+        color: #000;
+        text-decoration: underline;
+        padding-top: 4px;
+        font-weight: 700;
+        }
+        .column {
+        -webkit-column-width: 200px;
+        -moz-column-width: 200px;
+        column-width: 200px;
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3;
+        -webkit-column-gap: 30px;
+        -moz-column-gap: 30px;
+        column-gap: 30px;
+        -webkit-column-rule: 1px solid #ccc;
+        -moz-column-rule: 1px solid #ccc;
+        column-rule: 1px solid #ccc;
+       }
+
+    .dropbtn {
+        background-color: #947b00;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        background-color: #1a1a1a;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    }
+
+    .dropdown-content a {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {background-color: #999999;}
+
+    .dropdown:hover .dropdown-content {display: block;}
+
+    .dropdown:hover .dropbtn {background-color: #615100;}
+
+    .rating-area {
+	overflow: hidden;
+	width: 265px;
+	margin: 0 auto;
+    }
+    .rating-area:not(:checked) > input {
+        display: none;
+    }
+    .rating-area:not(:checked) > label {
+        float: right;
+        width: 42px;
+        padding: 0;
+        cursor: pointer;
+        font-size: 32px;
+        line-height: 32px;
+        color: lightgrey;
+        text-shadow: 1px 1px #bbb;
+    }
+    .rating-area:not(:checked) > label:before {
+        content: '★';
+    }
+    .rating-area > input:checked ~ label {
+        color: gold;
+        text-shadow: 1px 1px #c60;
+    }
+    .rating-area:not(:checked) > label:hover,
+    .rating-area:not(:checked) > label:hover ~ label {
+        color: gold;
+    }
+
+    .rating-area > input:checked + label:hover,
+    .rating-area > input:checked + label:hover ~ label,
+    .rating-area > input:checked ~ label:hover,
+    .rating-area > input:checked ~ label:hover ~ label,
+    .rating-area > label:hover ~ input:checked ~ label {
+        color: gold;
+        text-shadow: 1px 1px goldenrod;
+    }
+    .rate-area > label:active {
+        position: relative;
+    }
+    .rating-result {
+	width: 265px;
+	margin: 0 auto;
+    }
+    .rating-result span {
+        padding: 0;
+        font-size: 32px;
+        margin: 0 3px;
+        line-height: 1;
+        color: lightgrey;
+        text-shadow: 1px 1px #bbb;
+    }
+    .rating-result > span:before {
+        content: '★';
+    }
+    .rating-result > span.active {
+        color: gold;
+        text-shadow: 1px 1px #c60;
+    }
 
 
     </style>
@@ -54,44 +250,61 @@
 
 
 <body>
-    <header>
-      <nav class="navbar navbar-light bg-info">
-          <a href="/">Клуб любителей матушки Земли</a>
-          {% if current_user.is_authenticated %}
-          <a class="navbar-brand" href="/logout" style="color:FFFFFF;">{{ current_user.name }}</a>
-          {% else %}
-          <p>
-              <a class="btn btn-dark" href="/register">Зарегистрироваться</a>
-              <a class="btn btn-dark" href="/login">Войти</a>
-          </p>
-          {% endif %}
-      </nav>
-    </header>
-    <aside>
-        <nav id="sidebar">
-            <div class="sidebar-header">
-                <h3>Наши статьи</h3>
-            </div>
-            <ul class="list-unstyled components">
-                <li><a href="/">Земля</a></li>
-                <li><a href="#">Люди</a></li>
-                <li><a href="/test">Тестовая страница</a></li>
-                <li><a href="#">О нас</a></li>
-                <li><a href="#">Галерея</a></li>
-                <li><a href="#">Контакты</a></li>
-            </ul>
-        </nav>
-    </aside>
-
-    <div id="content">
-        <div id="content-holder">
-            <main role="main" class="container">
-                <div id="high-gear-html">
-                {% block content %}{% endblock %}
+<header>
+    <div class="topnav">
+        <aside class="in-header-left">
+            <a href="/">Клуб любителей матушки Земли</a>
+            <div class="dropdown">
+                <button class="dropbtn">Наши статьи</button>
+                <div class="dropdown-content">
+                    <a href="/article">Земля</a>
+                    <a href="/yandex_api">Вода</a>
+                    <a href="/profile">Огонь</a>
+                    <a href="/">Воздух</a>
                 </div>
-            </main>
-        </div>
+            </div>
+        </aside>
+        {% if current_user.is_authenticated %}
+        <aside class="in-header-right">
+            <a class="navbar-brand" href="/profile">{{ current_user.name }}</a>
+        </aside>
+        {% else %}
+        <aside class="in-header-right">
+            <a>
+                <a class="btn btn-dark" href="/register">Зарегистрироваться</a>
+                <a class="btn btn-dark" href="/login">Войти</a>
+            </a>
+        </aside>
+        {% endif %}
     </div>
+</header>
+
+<div id="content">
+    <div id="content-holder">
+        <main role="main" class="container">
+            <div id="high-gear-html">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+</div>
+
+<footer class="py-3">
+    <div class="copy-bottom-txt text-center py-3">
+        <p>
+            © 2020 Zemel'ka. All Rights Reserved | Design by <a href="https://github.com/4ekhov/new-repository-flask-used-" target="_blank">Pomor and 4ekhov</a>
+        </p>
+    </div>
+    <div class="social-icons mt-lg-3 mt-2 text-center">
+        <ul>
+            <li><a href="#"><span class="fa fa-telegram"></span></a></li>
+            <li><a href="#"><span class="fa fa-vk"></span></a></li>
+            <li><a href="#"><span class="fa fa-steam"></span></a></li>
+        </ul>
+    </div>
+</footer>
+<!-- CDN подключение иконок fontawesome -->
+<script src="https://use.fontawesome.com/df966d76e1.js"></script>
 </body>
 
 

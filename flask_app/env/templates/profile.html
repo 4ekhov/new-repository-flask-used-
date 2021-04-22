@@ -15,6 +15,12 @@
     <p>Дата написания - {{item.created_date}}</p>
 </div>
 {% endfor %}
+<div>
+<a href="news" class="btn btn-secondary">Добавить новость</a>
+</div>
+<div>
+<a class="btn btn-danger" href="/logout">Выйти из аккаунта</a>
+</div>
 {% elif current_user.is_authenticated and current_user.id != form[0].id %}
 <h1>Страница пользователя</h1>
 <p>Имя пользователя: {{form[0].name}}</p>
