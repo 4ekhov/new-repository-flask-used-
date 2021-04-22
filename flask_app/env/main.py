@@ -76,9 +76,17 @@ def index():
         )
     return render_template("index.html", news=news, posts=posts)
 
-@app.route("/article")
+@app.route("/article", methods=['GET', 'POST'])
 def image():
-    return render_template("type_article.html")
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.id == current_user.id, User.article_id == 1, User.was_read == False)
+        if user:
+            user.was_read = True
+            user.article_score = int(request.form['rating'])
+            return render_template("type_article.html", was_read=0)
+        else:
+            return render_template("type_article.html", was_read=1, rating=user.article_score)
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():

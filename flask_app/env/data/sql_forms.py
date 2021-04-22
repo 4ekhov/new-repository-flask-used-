@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from .db_session import SqlAlchemyBase
 from flask_login import UserMixin
 
+
 class Map(SqlAlchemyBase):
     __tablename__ = 'maps'
 
@@ -13,7 +14,12 @@ class Map(SqlAlchemyBase):
     coordinates = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     size = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     type = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    
+
+class Articletext(SqlAlchemyBase):
+    __tablename__ = 'article_text'
+
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    text = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
 class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
@@ -24,6 +30,9 @@ class User(SqlAlchemyBase, UserMixin):
     email = sqlalchemy.Column(sqlalchemy.String, index=True, unique=True, nullable=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
+    article_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("article_text.id"))
+    was_read = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    article_score = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
 
     news = orm.relation("News", back_populates='user')
 
@@ -35,11 +44,3 @@ class User(SqlAlchemyBase, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
-
-
-class Article(SqlAlchemyBase):
-    __tablename__ = 'article'
-
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
-    user_id = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    score = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
