@@ -35,34 +35,36 @@ def article(article_id):
             'fire_article.png',
             'air_article.png']
     way = ways[article_id - 1]
+    pics = ['earth.jpeg',
+            'water.jpg',
+            'fire.jpg',
+            'air.jpg']
+    pic = pics[article_id - 1]
     db_sess = db_session.create_session()
     art = db_sess.query(Article).filter(Article.id == article_id).first()
-    if not art.users_id and current_user.id >= 1:
-        form = RatingForm()
-        if form.validate_on_submit():
-            art.users_id, art.users_score = str(art.users_id) + ',' + str(current_user.id), str(
-                art.users_score) + ',' + str(form.rating)
-            db_sess.commit()
-            return render_template("type_article.html", title='Статья', way=way, was_scored=1, article_score=art.users_score[-1], form=form,
-                                   column1=art.text, column2=art.text_2)
-        return render_template("type_article.html", title='Статья', way=way, was_scored=0, form=form, column1=art.text, column2=art.text_2)
-    else:
-        form = RatingForm()
-        users_id, users_score = art.users_id, art.users_score
-        users_id, users_score = users_id.split(','), users_score.split(',')
-        if current_user.id in users_id:
-            num = users_id.index(current_user.id)
-            return render_template("type_article.html", title='Статья', way=way, was_scored=1, article_score=art.users_score[num], form=form,
-                                   column1=art.text, column2=art.text_2)
+    form = RatingForm()
+    users_id, users_score = art.users_id, art.users_score
+    users_id, users_score = list(users_id), list(users_score)
+    try:
+        if str(current_user.id) in users_id:
+            num = users_id.index(str(current_user.id))
+            print(art.users_score[num])
+            return render_template("type_article.html", title='Статья', way=way, was_scored=1,
+                                   article_score=int(art.users_score[num]), form=form,
+                                   column1=art.text, column2=art.text_2, pic=pic)
         else:
             form = RatingForm()
             if form.validate_on_submit():
-                art.users_id, art.users_score = str(art.users_id) + ',' + str(current_user.id), str(
-                    art.users_score) + ',' + str(form.rating)
+                art.users_id = str(art.users_id) + str(current_user.id)
+                art.users_score = str(art.users_score) + str(form.rating.data)
                 db_sess.commit()
-                return render_template("type_article.html", title='Статья', way=way, was_scored=1, article_score=art.users_score[-1], form=form,
-                                       column1=art.text, column2=art.text_2)
-            return render_template("type_article.html", title='Статья', way=way, was_scored=0, form=form, column1=art.text, column2=art.text_2)
+                return render_template("type_article.html", title='Статья', way=way, was_scored=1,
+                                       article_score=int(art.users_score[-1]), form=form,
+                                       column1=art.text, column2=art.text_2, pic=pic)
+            return render_template("type_article.html", title='Статья', way=way, was_scored=0, form=form,
+                                   column1=art.text, column2=art.text_2, pic=pic)
+    except AttributeError:
+        return redirect('/')
 
 
 @app.route('/yandex_api', methods=['GET', 'POST'])
