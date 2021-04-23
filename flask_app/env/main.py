@@ -30,35 +30,39 @@ def main():
 
 
 def article(article_id):
+    ways = ['earth_article.png',
+            'water_article.png',
+            'fire_article.png',
+            'air_article.png']
+    way = ways[article_id - 1]
     db_sess = db_session.create_session()
     art = db_sess.query(Article).filter(Article.id == article_id).first()
-    print(art)
     if not art.users_id and current_user.id >= 1:
         form = RatingForm()
-        if form.validate_on_submit:
+        if form.validate_on_submit():
             art.users_id, art.users_score = str(art.users_id) + ',' + str(current_user.id), str(
                 art.users_score) + ',' + str(form.rating)
             db_sess.commit()
-            return render_template("type_article.html", was_scored=1, article_score=art.users_score[-1], form=form,
+            return render_template("type_article.html", title='Статья', way=way, was_scored=1, article_score=art.users_score[-1], form=form,
                                    column1=art.text, column2=art.text_2)
-        return render_template("type_article.html", was_scored=0, form=form, column1=art.text, column2=art.text_2)
+        return render_template("type_article.html", title='Статья', way=way, was_scored=0, form=form, column1=art.text, column2=art.text_2)
     else:
         form = RatingForm()
         users_id, users_score = art.users_id, art.users_score
         users_id, users_score = users_id.split(','), users_score.split(',')
         if current_user.id in users_id:
             num = users_id.index(current_user.id)
-            return render_template("type_article.html", was_scored=1, article_score=art.users_score[num], form=form,
+            return render_template("type_article.html", title='Статья', way=way, was_scored=1, article_score=art.users_score[num], form=form,
                                    column1=art.text, column2=art.text_2)
         else:
             form = RatingForm()
-            if form.validate_on_submit:
+            if form.validate_on_submit():
                 art.users_id, art.users_score = str(art.users_id) + ',' + str(current_user.id), str(
                     art.users_score) + ',' + str(form.rating)
                 db_sess.commit()
-                return render_template("type_article.html", was_scored=1, article_score=art.users_score[-1], form=form,
+                return render_template("type_article.html", title='Статья', way=way, was_scored=1, article_score=art.users_score[-1], form=form,
                                        column1=art.text, column2=art.text_2)
-            return render_template("type_article.html", was_scored=0, form=form, column1=art.text, column2=art.text_2)
+            return render_template("type_article.html", title='Статья', way=way, was_scored=0, form=form, column1=art.text, column2=art.text_2)
 
 
 @app.route('/yandex_api', methods=['GET', 'POST'])
@@ -87,7 +91,8 @@ def yandex_map_api_show():
     if not response:
         db_sess.query(Map).filter(Map.coordinates == coords).delete(synchronize_session='evaluate')
         db_sess.commit()
-        return render_template('map_show.html', title='Запрос карты', way=None, message='Ошибка запроса карты')
+        return render_template('map_show.html', title='Запрос карты', way=None,
+                               message='Ошибка запроса карты: неправильные данные или нет ответа от сервера')
     map_file = "static/images/{}_{}_{}.png".format(coords, size, type_map)
     with open(map_file, "wb") as file:
         file.write(response.content)
@@ -97,15 +102,9 @@ def yandex_map_api_show():
 
 @app.route("/")
 def index():
-    posts = 'Земля'
+    posts = 'Новости пользователей'
     db_sess = db_session.create_session()
-    if current_user.is_authenticated:
-        news = db_sess.query(News).filter(
-            (News.user == current_user) | (News.is_private is not True))
-    else:
-        news = db_sess.query(News).filter(
-            (News.is_private is not True)
-        )
+    news = db_sess.query(News).filter((News.is_private != True))
     return render_template("index.html", news=news, posts=posts)
 
 
@@ -218,7 +217,7 @@ def profile_page(id):
                 (News.user_id == id))
             if id != current_user.id:
                 news = news.filter(News.is_private is not True)
-            return render_template('profile.html', form=(id_user, news))
+            return render_template('profile.html', title='Профиль', form=(id_user, news))
         return render_template('error.html', message='Такого пользователя не существует')
     return render_template('error.html', message='Вы не вошли в аккаунт')
 

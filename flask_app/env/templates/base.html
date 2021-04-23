@@ -4,9 +4,15 @@
 
 <head>
     <meta charset="utf-8">
+    <link rel="icon" href="data:;base64,=">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
+    .Site {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    }
     #content-holder{
     padding-left: 10%;
     padding-right: 10%;
@@ -48,6 +54,7 @@
     color: #FFFFFF;
     padding-left: 20%;
     padding-right: 20%;
+    flex: 1;
     }
     aside.in-header-left {
     position:relative;
@@ -208,11 +215,13 @@
 </head>
 
 
-<body>
+<body class="Site">
 <header>
     <div class="topnav">
         <aside class="in-header-left">
-            <a href="/">Клуб любителей матушки Земли</a>
+            <a href="/">
+
+                Клуб любителей матушки Земли</a>
             <div class="dropdown">
                 <button class="dropbtn">Наши статьи</button>
                 <div class="dropdown-content">

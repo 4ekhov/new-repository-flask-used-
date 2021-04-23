@@ -11,6 +11,7 @@ blueprint = flask.Blueprint(
 
 @blueprint.route('/api/news')
 def get_news():
+    """получение всех НЕ скрытых новостей пользователей"""
     db_sess = db_session.create_session()
     news = db_sess.query(News).filter(News.is_private != True)
     if news.first() is not None:
@@ -31,6 +32,7 @@ def get_news():
 
 @blueprint.route('/api/news/<id>')
 def get_news_by_id(id):
+    """получение НЕ скрытой новости по id"""
     db_sess = db_session.create_session()
     news = db_sess.query(News).filter(
         (News.id == id)).filter(News.is_private != True)
@@ -52,6 +54,7 @@ def get_news_by_id(id):
 
 @blueprint.route('/api/profiles')
 def get_profiles():
+    """получение страниц всех пользователей"""
     db_sess = db_session.create_session()
     users = db_sess.query(User).all()
     if users is not None:
@@ -72,6 +75,7 @@ def get_profiles():
 
 @blueprint.route('/api/profiles/<id>')
 def get_profile_by_id(id):
+    """получение страницы пользователя по id и вывод его НЕ скрытых новостей"""
     db_sess = db_session.create_session()
     users = db_sess.query(User).filter(
         (User.id == id))
@@ -94,6 +98,7 @@ def get_profile_by_id(id):
 
 @blueprint.route('/api/maps')
 def get_maps():
+    """получение всех запросов карт"""
     db_sess = db_session.create_session()
     maps = db_sess.query(Map).all()
     if maps is not None:
@@ -114,6 +119,7 @@ def get_maps():
 
 @blueprint.route('/api/maps/<id>')
 def get_maps_by_id(id):
+    """получение запроса карты по id"""
     db_sess = db_session.create_session()
     maps = db_sess.query(Map).filter(
         (Map.id == id))

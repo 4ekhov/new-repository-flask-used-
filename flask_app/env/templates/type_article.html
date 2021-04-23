@@ -4,27 +4,14 @@
 
 
 <div class="container">
-    <img src="static/images/earth.jpg" alt="img" style="width:100%;">
+    <img src="static/icons/{{way}}" height="80" width="80">
     <div id="rectangle"></div>
-    <div class="centered">Земля</div>
+    <div class="centered">Статья</div>
 </div>
 <div class="column">
     <p>{{ column1 }}</p>
     <p>{{ column2 }}</p>
 </div>
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.rating.label }}<br>
-        {{ form.rating(class="form-control") }}<br>
-        {% for error in form.rating.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-</form>
 {% if was_scored == 0 %}
 <form action="" method="post">
     {{ form.hidden_tag() }}
