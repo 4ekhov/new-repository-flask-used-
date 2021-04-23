@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.recaptcha import RecaptchaField
-from wtforms import PasswordField, StringField, TextAreaField, SubmitField, BooleanField, SelectField
+from wtforms import PasswordField, StringField, RadioField, TextAreaField, SubmitField, BooleanField, SelectField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 
@@ -30,9 +30,16 @@ class MapRequestForm(FlaskForm):
     submit = SubmitField('Смоделировать карту')
 
 
+class RatingForm(FlaskForm):
+    # rating = RadioField('Рейтинг',
+    #                    choices=[('1', '1_star'), ('2', '2_stars'), ('3', '3_stars'), ('4', '4_stars'),
+    #                             ('5', '5_stars')])
+    rating = SelectField('Рейтинг', choices=['1', '2', '3', '4', '5'])
+    submit = SubmitField('Оценить')
+
+
 class NewsForm(FlaskForm):
     title = StringField('Заголовок', validators=[DataRequired()])
     content = TextAreaField("Содержание")
     is_private = BooleanField("Личное")
     submit = SubmitField('Применить')
-

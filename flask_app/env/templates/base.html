@@ -75,9 +75,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 220px;
-    height: 120px;
-    background: #4da1f7;
+    width: 120px;
+    height: 50px;
+    background: #1a1a1a;
     }
     .container {
     position: relative;
@@ -182,47 +182,6 @@
 
     .dropdown:hover .dropbtn {background-color: #615100;}
 
-    .rating-area {
-	overflow: hidden;
-	width: 265px;
-	margin: 0 auto;
-    }
-    .rating-area:not(:checked) > input {
-        display: none;
-    }
-    .rating-area:not(:checked) > label {
-        float: right;
-        width: 42px;
-        padding: 0;
-        cursor: pointer;
-        font-size: 32px;
-        line-height: 32px;
-        color: lightgrey;
-        text-shadow: 1px 1px #bbb;
-    }
-    .rating-area:not(:checked) > label:before {
-        content: '★';
-    }
-    .rating-area > input:checked ~ label {
-        color: gold;
-        text-shadow: 1px 1px #c60;
-    }
-    .rating-area:not(:checked) > label:hover,
-    .rating-area:not(:checked) > label:hover ~ label {
-        color: gold;
-    }
-
-    .rating-area > input:checked + label:hover,
-    .rating-area > input:checked + label:hover ~ label,
-    .rating-area > input:checked ~ label:hover,
-    .rating-area > input:checked ~ label:hover ~ label,
-    .rating-area > label:hover ~ input:checked ~ label {
-        color: gold;
-        text-shadow: 1px 1px goldenrod;
-    }
-    .rate-area > label:active {
-        position: relative;
-    }
     .rating-result {
 	width: 265px;
 	margin: 0 auto;
@@ -257,10 +216,12 @@
             <div class="dropdown">
                 <button class="dropbtn">Наши статьи</button>
                 <div class="dropdown-content">
-                    <a href="/article">Земля</a>
-                    <a href="/yandex_api">Вода</a>
-                    <a href="/profile">Огонь</a>
-                    <a href="/">Воздух</a>
+                    <a href="/article_earth">Земля</a>
+                    <a href="/article_water">Вода</a>
+                    <a href="/article_fire">Огонь</a>
+                    <a href="/article_air">Воздух</a>
+                    <a href="/yandex_api">Карты</a>
+                    <a href="/profile">Профиль</a>
                 </div>
             </div>
         </aside>

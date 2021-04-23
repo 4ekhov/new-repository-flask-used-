@@ -4,23 +4,87 @@
 
 
 <div class="container">
-    <img src="static/images/img.jpg" alt="img" style="width:100%;">
+    <img src="static/images/earth.jpg" alt="img" style="width:100%;">
     <div id="rectangle"></div>
-    <div class="centered">Centered</div>
+    <div class="centered">Земля</div>
 </div>
 <div class="column">
-    <p>Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот!
-        Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот!
-        Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот!
-        Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот!
-        Макс бот!
-        Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот!
-        Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот!
-        Макс бот! Макс бот! Макс бот! Макс бот!</p>
-    <p>Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот!
-        Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот!
-        Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот! Макс бот!
-        Макс бот! Макс бот! Макс бот! Макс бот!</p>
+    <p>{{ column1 }}</p>
+    <p>{{ column2 }}</p>
 </div>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.rating.label }}<br>
+        {{ form.rating(class="form-control") }}<br>
+        {% for error in form.rating.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+</form>
+{% if was_scored == 0 %}
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.rating.label }}<br>
+        {{ form.rating(class="form-control") }}<br>
+        {% for error in form.rating.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+</form>
+{% else %}
+{% if article_score == 1 %}
+<div class="rating-result">
+    <span class="active"></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+{% endif %}
+{% if article_score == 2 %}
+<div class="rating-result">
+    <span class="active"></span>
+    <span class="active"></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+{% endif %}
+{% if article_score == 3 %}
+<div class="rating-result">
+    <span class="active"></span>
+    <span class="active"></span>
+    <span class="active"></span>
+    <span></span>
+    <span></span>
+</div>
+{% endif %}
+{% if article_score == 4 %}
+<div class="rating-result">
+    <span class="active"></span>
+    <span class="active"></span>
+    <span class="active"></span>
+    <span class="active"></span>
+    <span></span>
+</div>
+{% endif %}
+{% if article_score == 5 %}
+<div class="rating-result">
+    <span class="active"></span>
+    <span class="active"></span>
+    <span class="active"></span>
+    <span class="active"></span>
+    <span class="active"></span>
+</div>
+{% endif %}
+{% endif %}
 
 {% endblock %}

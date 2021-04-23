@@ -16,6 +16,14 @@ class Map(SqlAlchemyBase, SerializerMixin):
     size = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     type = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     
+class Article(SqlAlchemyBase):
+    __tablename__ = 'articles'
+
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    text = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    text_2 = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    users_id = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    users_score = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
 class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'

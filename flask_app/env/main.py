@@ -2,8 +2,8 @@ import os
 from shutil import rmtree
 import requests
 from flask import Flask, render_template, redirect, request
-from forms.user import RegisterForm, LoginForm, MapRequestForm, NewsForm
-from data.sql_forms import User, Map, News
+from forms.user import RegisterForm, LoginForm, MapRequestForm, NewsForm, RatingForm
+from data.sql_forms import User, Map, News, Article
 from data import db_session, api
 from flask_login import LoginManager, login_user, current_user, logout_user
 
@@ -27,6 +27,38 @@ def main():
         os.makedirs('static/images/')
     app.run()
     rmtree('static/images/')
+
+
+def article(article_id):
+    db_sess = db_session.create_session()
+    art = db_sess.query(Article).filter(Article.id == article_id).first()
+    print(art)
+    if not art.users_id and current_user.id >= 1:
+        form = RatingForm()
+        if form.validate_on_submit:
+            art.users_id, art.users_score = str(art.users_id) + ',' + str(current_user.id), str(
+                art.users_score) + ',' + str(form.rating)
+            db_sess.commit()
+            return render_template("type_article.html", was_scored=1, article_score=art.users_score[-1], form=form,
+                                   column1=art.text, column2=art.text_2)
+        return render_template("type_article.html", was_scored=0, form=form, column1=art.text, column2=art.text_2)
+    else:
+        form = RatingForm()
+        users_id, users_score = art.users_id, art.users_score
+        users_id, users_score = users_id.split(','), users_score.split(',')
+        if current_user.id in users_id:
+            num = users_id.index(current_user.id)
+            return render_template("type_article.html", was_scored=1, article_score=art.users_score[num], form=form,
+                                   column1=art.text, column2=art.text_2)
+        else:
+            form = RatingForm()
+            if form.validate_on_submit:
+                art.users_id, art.users_score = str(art.users_id) + ',' + str(current_user.id), str(
+                    art.users_score) + ',' + str(form.rating)
+                db_sess.commit()
+                return render_template("type_article.html", was_scored=1, article_score=art.users_score[-1], form=form,
+                                       column1=art.text, column2=art.text_2)
+            return render_template("type_article.html", was_scored=0, form=form, column1=art.text, column2=art.text_2)
 
 
 @app.route('/yandex_api', methods=['GET', 'POST'])
@@ -76,16 +108,25 @@ def index():
         )
     return render_template("index.html", news=news, posts=posts)
 
-@app.route("/article", methods=['GET', 'POST'])
-def image():
-    db_sess = db_session.create_session()
-    user = db_sess.query(User).filter(User.id == current_user.id, User.article_id == 1, User.was_read is False)
-    if user:
-        user.was_read = True
-        user.article_score = int(request.form['rating'])
-        return render_template("type_article.html", was_read=0)
-    else:
-        return render_template("type_article.html", was_read=1, rating=user.article_score)
+
+@app.route("/article_earth", methods=['GET', 'POST'])
+def earth():
+    return article(1)
+
+
+@app.route("/article_water", methods=['GET', 'POST'])
+def water():
+    return article(2)
+
+
+@app.route("/article_fire", methods=['GET', 'POST'])
+def fire():
+    return article(3)
+
+
+@app.route("/article_air", methods=['GET', 'POST'])
+def air():
+    return article(4)
 
 
 @app.route('/register', methods=['GET', 'POST'])
